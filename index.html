@@ -84,18 +84,13 @@
       filter: blur(56px); opacity: 0.65;
       pointer-events: none;
       background:
-        radial-gradient(ellipse at 22% 18%, #f9a8c9 0%, transparent 52%),
-        radial-gradient(ellipse at 58% 12%, #fbd38d 0%, transparent 46%),
-        radial-gradient(ellipse at 82% 38%, #c4b5fd 0%, transparent 48%),
-        radial-gradient(ellipse at 60% 52%, #a5b4fc 0%, transparent 44%),
-        radial-gradient(ellipse at 20% 72%, #fbcfe8 0%, transparent 52%),
-        radial-gradient(ellipse at 82% 76%, #fda4af 0%, transparent 48%),
-        radial-gradient(ellipse at 48% 88%, #fde68a 0%, transparent 46%);
-      animation: blobFloat 9s ease-in-out infinite;
-    }
-    @keyframes blobFloat {
-      0%, 100% { transform: translateY(-50%) scale(1); }
-      50%       { transform: translateY(calc(-50% - 20px)) scale(1.04); }
+        radial-gradient(ellipse at 22% 18%, #f472b6 0%, transparent 52%),
+        radial-gradient(ellipse at 58% 12%, #facc15 0%, transparent 46%),
+        radial-gradient(ellipse at 82% 38%, #a855f7 0%, transparent 48%),
+        radial-gradient(ellipse at 60% 52%, #6366f1 0%, transparent 44%),
+        radial-gradient(ellipse at 20% 72%, #ec4899 0%, transparent 52%),
+        radial-gradient(ellipse at 82% 76%, #f97316 0%, transparent 48%),
+        radial-gradient(ellipse at 48% 88%, #fb923c 0%, transparent 46%);
     }
 
     /* ══ S2 ══ */
@@ -505,6 +500,29 @@
     (function() {
       var vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', vh + 'px');
+    })();
+
+    // ── Blob: float + scroll rotation + parallax ──
+    (function() {
+      const blob = document.querySelector('.blob');
+      let floatStart = null;
+
+      function animateBlob(ts) {
+        if (!floatStart) floatStart = ts;
+        const elapsed = ts - floatStart;
+        const cycle = (elapsed % 9000) / 9000;
+        const floatY = Math.sin(cycle * 2 * Math.PI) * 20;
+        const floatScale = 1 + Math.sin(cycle * 2 * Math.PI) * 0.02;
+        const scrollY = window.scrollY;
+        const rotate = scrollY * 0.06;
+        const parallax = scrollY * 0.28;
+
+        blob.style.transform =
+          `translateY(calc(-50% + ${floatY - parallax}px)) rotate(${rotate}deg) scale(${floatScale})`;
+        requestAnimationFrame(animateBlob);
+      }
+
+      requestAnimationFrame(animateBlob);
     })();
 
     // ── Scroll reveal — both .reveal and .reveal-fade ──
