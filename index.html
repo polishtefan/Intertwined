@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intertwined — because it matters.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Arimo:wght@400;500&display=swap" rel="stylesheet" />
+  <script async src="https://subscribe-forms.beehiiv.com/embed.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #ffffff;
+      --ink: #18160f;
+      --ink-soft: #2e2c26;
+      --ink-faint: #a09c95;
+      --rule: #dedad3;
+      --vh: 1vh; /* overwritten by JS once on load — never on scroll */
+    }
+
+    html { scroll-behavior: smooth; }
+    html, body { overflow-x: hidden; }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: 'Arimo', sans-serif;
+    }
+
+    .section {
+      min-height: calc(var(--vh) * 100);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── REVEAL ──
+       No translateY on S1 bottom so it never "jumps down" in webviews.
+       Everything else keeps the upward reveal. */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.85s ease, transform 0.85s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* S1 bottom: fade only, zero transform — prevents jump in Telegram/in-app webviews */
+    .reveal-fade {
+      opacity: 0;
+      transform: none !important;
+      transition: opacity 1.1s ease 0.2s;
+    }
+    .reveal-fade.visible { opacity: 1; }
+
+    .reveal-delay-1 { transition-delay: 0.12s; }
+    .reveal-delay-2 { transition-delay: 0.24s; }
+    .reveal-delay-3 { transition-delay: 0.36s; }
+    .reveal-delay-4 { transition-delay: 0.48s; }
+    .reveal-delay-5 { transition-delay: 0.60s; }
+
+    /* ══ S1 ══ */
+    #s1 { justify-content: space-between; padding: 120px 64px; }
+    .s1-top {
+      font-family: 'Libre Baskerville', serif;
+      font-size: clamp(52px, 9vw, 96px);
+      font-weight: 700; line-height: 1.1;
+      color: var(--ink); max-width: 700px;
+    }
+    .s1-top em { font-style: italic; font-weight: 400; }
+    .s1-bottom {
+      font-family: 'Libre Baskerville', serif;
+      font-size: clamp(20px, 3vw, 28px);
+      font-style: italic; color: var(--ink-soft);
+      margin-top: 80px; max-width: 560px;
+    }
+    .blob {
+      position: absolute;
+      width: 320px; height: 390px;
+      right: 180px; top: 50%;
+      transform: translateY(-50%);
+      filter: blur(56px); opacity: 0.65;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 22% 18%, #f9a8c9 0%, transparent 52%),
+        radial-gradient(ellipse at 58% 12%, #fbd38d 0%, transparent 46%),
+        radial-gradient(ellipse at 82% 38%, #c4b5fd 0%, transparent 48%),
+        radial-gradient(ellipse at 60% 52%, #a5b4fc 0%, transparent 44%),
+        radial-gradient(ellipse at 20% 72%, #fbcfe8 0%, transparent 52%),
+        radial-gradient(ellipse at 82% 76%, #fda4af 0%, transparent 48%),
+        radial-gradient(ellipse at 48% 88%, #fde68a 0%, transparent 46%);
+      animation: blobFloat 9s ease-in-out infinite;
+    }
+    @keyframes blobFloat {
+      0%, 100% { transform: translateY(-50%) scale(1); }
+      50%       { transform: translateY(calc(-50% - 20px)) scale(1.04); }
+    }
+
+    /* ══ S2 ══ */
+    #s2 { align-items: center; justify-content: center; text-align: center; min-height: 70vh; }
+    .s2-struck {
+      font-family: 'Arimo', sans-serif;
+      font-size: clamp(14px, 2vw, 18px);
+      color: var(--ink-faint);
+      text-decoration: line-through;
+      line-height: 2.4; letter-spacing: 0.02em;
+    }
+    .s2-word {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic;
+      font-size: clamp(52px, 8vw, 80px);
+      color: var(--ink); margin-top: 12px; display: block;
+    }
+
+    /* ══ S3 ══ */
+    #s3 {
+      padding: 100px 64px 120px;
+      justify-content: space-between;
+      min-height: 100vh;
+    }
+
+    .s3-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    #s3-path {
+      stroke: var(--ink); stroke-width: 1px;
+      fill: none; stroke-linecap: square; stroke-linejoin: miter;
+    }
+
+    .s3-question {
+      font-family: 'Arimo', sans-serif;
+      font-size: clamp(18px, 2.5vw, 22px);
+      color: var(--ink-soft);
+      line-height: 1.6;
+      max-width: 380px;
+      align-self: flex-start;
+      /* push question up so "go through?" lands well below */
+      margin-bottom: auto;
+    }
+    .s3-question em {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic; color: var(--ink);
+    }
+
+    /* spacer pushes "go through?" to bottom */
+    .s3-spacer { flex: 1; }
+
+    .s3-go-through {
+      align-self: flex-end;
+      font-family: 'Arimo', sans-serif;
+      font-size: clamp(18px, 2.5vw, 22px);
+      color: var(--ink);
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      /* extra bottom margin so it sits above section edge */
+      margin-bottom: 20px;
+    }
+    .s3-go-through.visible { opacity: 1; }
+
+    /* ══ S4 ══ */
+    #s4 { padding: 120px 64px; justify-content: space-between; }
+    .s4-top {
+      font-family: 'Libre Baskerville', serif;
+      font-size: clamp(36px, 6vw, 68px);
+      font-weight: 700; line-height: 1.15;
+      color: var(--ink); max-width: 600px;
+    }
+    .s4-bottom {
+      align-self: flex-end; text-align: right;
+      font-family: 'Arimo', sans-serif;
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--ink-soft); max-width: 400px;
+    }
+    .s4-bottom em {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic; color: var(--ink);
+    }
+
+    /* ══ S5 ══ */
+    #s5 { padding: 120px 64px; }
+    .s5-headline {
+      font-family: 'Libre Baskerville', serif;
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 700; line-height: 1.2;
+      color: var(--ink); margin-bottom: 48px;
+    }
+    .s5-headline em { font-style: italic; font-weight: 400; }
+    .s5-list {
+      list-style: none;
+      font-family: 'Arimo', sans-serif;
+      font-size: clamp(15px, 1.8vw, 18px);
+      color: var(--ink-soft); line-height: 1;
+    }
+    .s5-list li {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--rule);
+      display: flex; align-items: baseline; gap: 6px;
+    }
+    .s5-list li:first-child { border-top: 1px solid var(--rule); }
+    .s5-list em {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic; color: var(--ink);
+      text-decoration: underline; text-underline-offset: 3px;
+    }
+    .s5-list li.gap-above { margin-top: 24px; }
+    .s5-closing {
+      margin-top: 40px;
+      font-family: 'Arimo', sans-serif;
+      font-size: clamp(15px, 1.8vw, 18px);
+      color: var(--ink-soft); line-height: 1.9;
+    }
+    .s5-closing em {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic; color: var(--ink);
+    }
+
+    /* ══ S6 ══ */
+    #s6 { padding: 120px 64px; justify-content: center; }
+    .s6-scene { display: flex; flex-direction: column; gap: 40px; }
+    .s6-lead {
+      font-family: 'Arimo', sans-serif;
+      font-size: clamp(18px, 2.2vw, 22px);
+      color: var(--ink-soft);
+    }
+    .s6-words-list { display: flex; flex-direction: column; gap: 0; }
+    .s6-word-row {
+      display: flex; align-items: baseline; gap: 20px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--rule);
+      opacity: 0; transform: translateX(-16px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .s6-word-row:first-child { border-top: 1px solid var(--rule); }
+    .s6-word-row.visible { opacity: 1; transform: translateX(0); }
+    .s6-num {
+      font-family: 'Arimo', sans-serif;
+      font-size: 12px; color: var(--ink-faint);
+      letter-spacing: 0.1em; min-width: 20px;
+    }
+    .s6-word {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic;
+      font-size: clamp(28px, 4vw, 44px);
+      color: var(--ink); line-height: 1;
+    }
+
+    /* ══ S7 ══ */
+    #s7 { padding: 120px 64px; justify-content: center; }
+    .s7-inner { max-width: 640px; width: 100%; }
+
+    .s7-greeting {
+      font-family: 'Arimo', sans-serif;
+      font-size: 15px; color: var(--ink-faint);
+      letter-spacing: 0.04em; margin-bottom: 10px;
+    }
+
+    /* headline — controlled size so "When was the last time / you felt truly seen?" = 2 lines */
+    .s7-headline {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic;
+      font-size: clamp(28px, 3.6vw, 46px);
+      line-height: 1.25; color: var(--ink);
+      margin-bottom: 40px;
+      max-width: 520px;
+    }
+
+    /* questions list — same style as S5 */
+    .bubbles {
+      display: flex; flex-direction: column;
+      gap: 0; margin-bottom: 36px;
+      border-top: 1px solid var(--rule);
+    }
+    .bubble {
+      font-family: 'Arimo', sans-serif;
+      font-size: clamp(15px, 1.8vw, 18px);
+      font-weight: 400;
+      line-height: 1.6; color: var(--ink-soft);
+      padding: 11px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .bubble em {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic; color: var(--ink);
+      text-decoration: underline; text-underline-offset: 3px;
+    }
+    .bubble.left, .bubble.right {
+      align-self: unset; background: none;
+      box-shadow: none; border-radius: 0;
+    }
+
+    .s7-copy {
+      font-family: 'Arimo', sans-serif;
+      font-size: clamp(15px, 1.8vw, 18px);
+      line-height: 1.9; color: var(--ink-soft);
+      margin-bottom: 36px;
+    }
+
+    .iframe-wrapper {
+      width: 100%; position: relative;
+      height: 47px;
+      display: flex; justify-content: flex-start;
+      overflow: hidden;
+    }
+
+    /* footer — clean wordmark, no rules */
+    .s7-footer {
+      margin-top: 56px;
+      display: flex; align-items: center; gap: 0;
+    }
+    .footer-rule { display: none; }
+    .footer-wordmark {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .footer-name {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic; font-weight: 400;
+      font-size: 16px; color: var(--ink);
+      letter-spacing: 0.01em;
+    }
+    .footer-divider { width: 20px; height: 1px; background: var(--rule); flex-shrink: 0; }
+    .footer-tag {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic; font-size: 16px;
+      color: var(--ink-faint);
+    }
+
+    /* ══ MOBILE ══ */
+    @media (max-width: 600px) {
+      .section { padding: 80px 24px; }
+
+      #s1 { padding: 100px 24px 140px; min-height: calc(var(--vh) * 100); }
+      .s1-top { font-size: clamp(40px, 12vw, 56px); }
+      .s1-bottom { font-size: 19px; margin-top: 120px; }
+      .blob { width: 260px; height: 320px; right: -20px; top: 38%; opacity: 0.55; filter: blur(44px); }
+
+      #s2 { min-height: calc(var(--vh) * 60); padding: 60px 24px; }
+      .s2-struck { font-size: 16px; }
+      .s2-word { font-size: clamp(44px, 12vw, 64px); }
+
+      #s3 { padding: 80px 24px 100px; min-height: calc(var(--vh) * 100); }
+      .s3-question { font-size: 18px; }
+      .s3-go-through { font-size: 18px; }
+
+      #s4 { padding: 80px 24px; gap: 80px; min-height: calc(var(--vh) * 100); }
+      .s4-bottom { align-self: flex-start; text-align: left; }
+
+      #s5 { padding: 80px 24px; }
+      .s5-list li.gap-above { margin-top: 16px; }
+
+      #s6 { padding: 80px 24px; min-height: 80vh; }
+      .s6-word { font-size: clamp(26px, 8vw, 36px); }
+
+      #s7 { padding: 80px 24px; }
+      .s7-headline { font-size: clamp(24px, 7vw, 32px); max-width: 100%; }
+      .bubble { font-size: 15px; }
+      .s7-copy { font-size: 16px; }
+
+      .iframe-wrapper { height: 47px; }
+
+      /* footer centered on mobile */
+      .s7-footer {
+        justify-content: center;
+        margin-top: 48px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ S1 ══ -->
+  <section class="section" id="s1">
+    <div class="blob"></div>
+    <div class="s1-top reveal">You talk to people <em>every</em> day.</div>
+    <!-- reveal-fade: opacity only, no translateY — prevents jump in Telegram/webview -->
+    <div class="s1-bottom reveal-fade reveal-delay-3">but when was the last time<br>you felt truly seen?</div>
+  </section>
+
+  <!-- ══ S2 ══ -->
+  <section class="section" id="s2">
+    <div class="s2-struck reveal">not listened to</div>
+    <div class="s2-struck reveal reveal-delay-1">not replied to</div>
+    <span class="s2-word reveal reveal-delay-3">seen</span>
+  </section>
+
+  <!-- ══ S3 ══ -->
+  <section class="section" id="s3">
+    <svg class="s3-canvas" id="s3-svg" xmlns="http://www.w3.org/2000/svg">
+      <path id="s3-path"/>
+    </svg>
+
+    <div class="s3-question reveal" id="s3-question">
+      when did conversations<br>
+      <em>start feeling like something<br>you just…</em>
+    </div>
+
+    <div class="s3-spacer"></div>
+
+    <div class="s3-go-through" id="s3-go-through">go through?</div>
+  </section>
+
+  <!-- ══ S4 ══ -->
+  <section class="section" id="s4">
+    <div class="s4-top reveal">That is why I am<br>creating an app,</div>
+    <div class="s4-bottom reveal reveal-delay-3">because the emptiness<br><em>hurts me too.</em></div>
+  </section>
+
+  <!-- ══ S5 ══ -->
+  <section class="section" id="s5">
+    <div class="s5-headline reveal"><em>Intertwined</em> is for<br>anyone who forgot</div>
+    <ul class="s5-list">
+      <li class="reveal reveal-delay-1">to feel <em>connected</em> to the people around you.</li>
+      <li class="reveal reveal-delay-1">to yourself. to your family.</li>
+      <li class="reveal reveal-delay-2">to your first childhood love.</li>
+      <li class="reveal reveal-delay-2">to what makes you smile.</li>
+      <li class="reveal reveal-delay-3">to the things that made you proud.</li>
+      <li class="reveal reveal-delay-3">to the memories you wish to hold on to.</li>
+      <li class="reveal reveal-delay-4 gap-above">to <em>remember</em> what makes your life full.</li>
+      <li class="reveal reveal-delay-4">to see your own fears.</li>
+      <li class="reveal reveal-delay-4">to make the people you love feel loved.</li>
+    </ul>
+    <p class="s5-closing reveal reveal-delay-5">
+      because <em>you deserve</em> honest conversations.<br>
+      the kind that make you <em>feel less alone.</em>
+    </p>
+  </section>
+
+  <!-- ══ S6 ══ -->
+  <section class="section" id="s6">
+    <div class="s6-scene">
+      <span class="s6-lead reveal">are you ready to</span>
+      <div class="s6-words-list" id="s6-words-list">
+        <div class="s6-word-row" id="s6-r1">
+          <span class="s6-num">01</span>
+          <span class="s6-word">speak?</span>
+        </div>
+        <div class="s6-word-row" id="s6-r2">
+          <span class="s6-num">02</span>
+          <span class="s6-word">listen?</span>
+        </div>
+        <div class="s6-word-row" id="s6-r3">
+          <span class="s6-num">03</span>
+          <span class="s6-word">relive?</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ S7 ══ -->
+  <section class="section" id="s7">
+    <div class="s7-inner">
+      <div class="s7-greeting reveal">Dear Stranger,</div>
+
+      <!-- Shorter font-size so "When was the last time / you felt truly seen?" stays 2 lines -->
+      <h1 class="s7-headline reveal reveal-delay-1">When was the last time<br>you felt truly seen?</h1>
+
+      <!-- Questions kept short so each stays one line -->
+      <div class="bubbles">
+        <div class="bubble left reveal reveal-delay-2">What made you feel most <em>loved</em> as a child?</div>
+        <div class="bubble right reveal reveal-delay-3">What do you wish someone had <em>asked</em> you?</div>
+        <div class="bubble left reveal reveal-delay-4">What do you want the people you love to <em>know?</em></div>
+      </div>
+
+      <p class="s7-copy reveal reveal-delay-3">
+        One question a day.<br>
+        For you, and the people who matter most.<br>
+        Join the waitlist — be the first in.
+      </p>
+
+      <div class="reveal reveal-delay-4">
+        <div class="iframe-wrapper">
+          <iframe src="https://subscribe-forms.beehiiv.com/3335ef84-de17-4264-9f50-233b8ea39e26"
+            class="beehiiv-embed" data-test-id="beehiiv-embed"
+            frameborder="0" scrolling="no"
+            style="width: 400px; height: 47px; margin: 0; border-radius: 0px 0px 0px 0px !important; background-color: transparent; box-shadow: 0 0 #0000; max-width: 100%;">
+          </iframe>
+        </div>
+      </div>
+
+      <div class="s7-footer reveal reveal-delay-5">
+        <span class="footer-rule"></span>
+        <div class="footer-wordmark">
+          <span class="footer-name">Intertwined</span>
+          <span class="footer-divider"></span>
+          <span class="footer-tag">because it matters</span>
+        </div>
+        <span class="footer-rule"></span>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // ── Fix iOS in-app browser scroll jump ──
+    // Set --vh once from window.innerHeight (the real stable value).
+    // Never update on scroll or resize — that's what causes the jump.
+    // In-app browsers (Instagram, Telegram) resize the viewport as UI
+    // chrome appears/disappears; 100vh responds to that and causes sections
+    // to reflow mid-scroll. Locking --vh to the initial value prevents it.
+    (function() {
+      var vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', vh + 'px');
+    })();
+
+    // ── Scroll reveal — both .reveal and .reveal-fade ──
+    const isMobile = window.innerWidth <= 600;
+    const rootMargin = isMobile ? '0px 0px -12% 0px' : '0px 0px -5% 0px';
+
+    document.querySelectorAll('.reveal, .reveal-fade').forEach(el => {
+      new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+      }, { threshold: 0, rootMargin }).observe(el);
+    });
+
+    // ── S3: three-segment path — start LEFT of question, end with gap before "go through?" ──
+    function buildS3() {
+      const section  = document.getElementById('s3');
+      const question = document.getElementById('s3-question');
+      const answer   = document.getElementById('s3-go-through');
+      const svg      = document.getElementById('s3-svg');
+      const path     = document.getElementById('s3-path');
+
+      const sr = section.getBoundingClientRect();
+      const qr = question.getBoundingClientRect();
+      const ar = answer.getBoundingClientRect();
+
+      const W = section.offsetWidth;
+      const H = section.offsetHeight;
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+      // Start: LEFT edge of question text, vertically at its bottom
+      const x1 = qr.left - sr.left;
+      const y1 = qr.bottom - sr.top + 8; // just below the question block
+
+      // End: stop 48px before the left edge of "go through?" — breathing room
+      const x2 = (ar.left - sr.left) - 48;
+      const y2 = ar.top - sr.top + ar.height / 2;
+
+      // Vertical spine: turn earlier on mobile so line drops sooner
+      const spineX = W < 600 ? W * 0.45 : W * 0.76;
+
+      const d = [
+        `M ${x1} ${y1}`,      // start below-left of question
+        `L ${spineX} ${y1}`,  // go right
+        `L ${spineX} ${y2}`,  // drop down
+        `L ${x2} ${y2}`,      // go left toward "go through?" with gap
+      ].join(' ');
+
+      path.setAttribute('d', d);
+      const len = path.getTotalLength();
+      path.style.strokeDasharray = len;
+      path.style.strokeDashoffset = len;
+      path.style.transition = `stroke-dashoffset 1.8s cubic-bezier(0.4,0,0.2,1)`;
+    }
+
+    document.fonts.ready.then(buildS3);
+
+    // Trigger when question scrolls in
+    const s3q    = document.getElementById('s3-question');
+    const s3path = document.getElementById('s3-path');
+    const s3gt   = document.getElementById('s3-go-through');
+
+    new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          s3path.style.strokeDashoffset = '0';
+          // "go through?" fades in after line finishes drawing
+          setTimeout(() => s3gt.classList.add('visible'), 1900);
+        }
+      });
+    }, { threshold: 0.5 }).observe(s3q);
+
+    // ── S6: staggered slide-in ──
+    new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          document.querySelectorAll('.s6-word-row').forEach((row, i) => {
+            setTimeout(() => row.classList.add('visible'), i * 180);
+          });
+        }
+      });
+    }, { threshold: 0.3 }).observe(document.getElementById('s6-words-list'));
+  </script>
+
+</body>
+</html>
