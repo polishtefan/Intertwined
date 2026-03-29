@@ -62,7 +62,7 @@
     .reveal-delay-5 { transition-delay: 0.60s; }
 
     /* ══ S1 ══ */
-    #s1 { justify-content: space-between; padding: 120px 64px; }
+    #s1 { justify-content: space-between; padding: 120px 64px 60px; }
     .s1-top {
       font-family: 'Libre Baskerville', serif;
       font-size: clamp(52px, 9vw, 96px);
@@ -75,12 +75,15 @@
       font-size: clamp(20px, 3vw, 28px);
       font-style: italic; color: var(--ink-soft);
       margin-top: 80px; max-width: 560px;
+      position: relative; z-index: 1;
     }
+    .s1-top { position: relative; z-index: 1; }
     .girl-wrap {
       position: absolute;
       right: 120px; top: 50%;
       transform: translateY(-50%);
       pointer-events: none;
+      z-index: 0;
     }
     .girl-wrap img {
       width: 300px;
