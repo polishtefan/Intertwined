@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service — Intertwined</title>
+  <meta name="description" content="Terms of Service for Intertwined." />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Arimo:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #ffffff;
+      --ink: #18160f;
+      --ink-soft: #2e2c26;
+      --ink-faint: #a09c95;
+      --rule: #dedad3;
+    }
+
+    html { scroll-behavior: smooth; }
+    html, body { overflow-x: hidden; }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: 'Arimo', sans-serif;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      padding: 32px 64px;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-wordmark {
+      display: flex; align-items: center; gap: 12px;
+      text-decoration: none;
+    }
+    .nav-name {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic; font-weight: 400;
+      font-size: 18px; color: var(--ink);
+    }
+    .nav-divider { width: 20px; height: 1px; background: var(--rule); flex-shrink: 0; }
+    .nav-tag {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic; font-size: 15px;
+      color: var(--ink-faint);
+    }
+
+    /* ── MAIN ── */
+    .page {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 80px 64px 120px;
+    }
+
+    .page-eyebrow {
+      font-family: 'Arimo', sans-serif;
+      font-size: 12px; letter-spacing: 0.1em;
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .page-title {
+      font-family: 'Libre Baskerville', serif;
+      font-weight: 700;
+      font-size: clamp(36px, 5vw, 52px);
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .page-date {
+      font-family: 'Arimo', sans-serif;
+      font-size: 14px;
+      color: var(--ink-faint);
+      margin-bottom: 56px;
+    }
+
+    /* ── SECTIONS ── */
+    .terms-section {
+      border-top: 1px solid var(--rule);
+      padding-top: 36px;
+      margin-bottom: 48px;
+    }
+
+    .terms-section:last-of-type {
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 36px;
+    }
+
+    .terms-section h2 {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(20px, 2.4vw, 26px);
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+
+    .terms-section p,
+    .terms-section li {
+      font-family: 'Arimo', sans-serif;
+      font-size: clamp(15px, 1.6vw, 17px);
+      line-height: 1.85;
+      color: var(--ink-soft);
+      margin-bottom: 14px;
+    }
+
+    .terms-section p:last-child { margin-bottom: 0; }
+
+    .terms-section ul,
+    .terms-section ol {
+      padding-left: 1.4em;
+      margin-bottom: 14px;
+    }
+
+    .terms-section li { margin-bottom: 6px; }
+
+    .terms-section em {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic;
+      color: var(--ink);
+    }
+
+    .terms-section a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .terms-section a:hover { color: var(--ink-soft); }
+
+    /* ── FOOTER ── */
+    .page-footer {
+      margin-top: 64px;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-wordmark {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .footer-name {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic; font-weight: 400;
+      font-size: 16px; color: var(--ink);
+    }
+    .footer-divider { width: 20px; height: 1px; background: var(--rule); flex-shrink: 0; }
+    .footer-tag {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic; font-size: 15px;
+      color: var(--ink-faint);
+    }
+    .footer-back {
+      font-family: 'Arimo', sans-serif;
+      font-size: 14px; color: var(--ink-faint);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .footer-back:hover { color: var(--ink); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 600px) {
+      .nav { padding: 24px; }
+      .nav-divider, .nav-tag { display: none; }
+      .page { padding: 56px 24px 80px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a class="nav-wordmark" href="index.html">
+      <span class="nav-name">Intertwined</span>
+      <span class="nav-divider"></span>
+      <span class="nav-tag">because it matters</span>
+    </a>
+  </nav>
+
+  <main class="page">
+
+    <p class="page-eyebrow">Legal</p>
+    <h1 class="page-title">Terms of Service</h1>
+    <p class="page-date">Last updated: April 17, 2026</p>
+
+    <!-- ── PASTE YOUR SECTIONS BELOW ── -->
+
+    <div class="terms-section" id="agreement">
+      <h2>Agreement to Terms</h2>
+      <p>Paste your content here.</p>
+    </div>
+
+    <div class="terms-section" id="use">
+      <h2>Use of the Service</h2>
+      <p>Paste your content here.</p>
+    </div>
+
+    <div class="terms-section" id="accounts">
+      <h2>Accounts</h2>
+      <p>Paste your content here.</p>
+    </div>
+
+    <div class="terms-section" id="content">
+      <h2>User Content</h2>
+      <p>Paste your content here.</p>
+    </div>
+
+    <div class="terms-section" id="privacy">
+      <h2>Privacy</h2>
+      <p>Paste your content here.</p>
+    </div>
+
+    <div class="terms-section" id="termination">
+      <h2>Termination</h2>
+      <p>Paste your content here.</p>
+    </div>
+
+    <div class="terms-section" id="liability">
+      <h2>Limitation of Liability</h2>
+      <p>Paste your content here.</p>
+    </div>
+
+    <div class="terms-section" id="contact">
+      <h2>Contact</h2>
+      <p>Paste your content here.</p>
+    </div>
+
+    <!-- ── END OF SECTIONS ── -->
+
+    <footer class="page-footer">
+      <div class="footer-wordmark">
+        <span class="footer-name">Intertwined</span>
+        <span class="footer-divider"></span>
+        <span class="footer-tag">because it matters</span>
+      </div>
+      <a class="footer-back" href="index.html">← back to home</a>
+    </footer>
+
+  </main>
+
+</body>
+</html>
